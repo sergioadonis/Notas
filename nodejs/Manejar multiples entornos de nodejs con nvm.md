@@ -47,6 +47,7 @@ sa:~/environment $ nvm --version
 ## Comandos básicos de NVM
 Una vez que tengamos instalado esta herramienta, podemos comenzar a usarla de 
 distintas formas, acá las que me han sido de utilidad:
+
 Instalar la útlima versión de Node:
 ```
 sa:~/environment $ nvm install node
@@ -97,7 +98,7 @@ Podemos verificar la versión por defecto con el siguiente comando:
 sa:~/environment $ nvm run default node --version
 Running node v6.15.0 (npm v3.10.10)
 ```
-*default* solo es un alias en nvm, podemos cambiarlo para que siempre nuestra 
+*default* solo es un alias en nvm, podemos cambiarlo para que nuestra 
 terminal siempre inicie con una versión específica con el siguiente comando:
 ```
 sa:~/environment $ nvm alias default 8.10.0
