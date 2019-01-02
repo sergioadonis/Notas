@@ -1,0 +1,65 @@
+# Actualizar la última versión de aws-sam-cli
+
+Siempre es bueno manejar las últimas versiones de las herramientas que estemos
+usando para evitarnos algún comportamiento extraño, y más cuando estamos 
+experimentando con tencologías relativamente nuevas.
+
+Es el caso personar de aws-sam-cli, la interfaz de línea de comandos de AWS 
+Serverless Application Model https://github.com/awslabs/aws-sam-cli, el cual 
+según su página de github tiene soporte para nodejs8.10, pero con la versión 
+0.8.1 genera un error al intentar ejecutar el comando para compilar.
+
+Evidencia:
+```
+sa:~/environment $ sam --version
+SAM CLI, version 0.8.1
+sa:~/environment $ sam init --runtime nodejs8.10
+[+] Initializing project structure...
+[SUCCESS] - Read sam-app/README.md for further instructions on how to proceed
+[*] Project initialization is now complete
+sa:~/environment $ cd sam-app/
+sa:~/environment/sam-app $ sam build --use-container
+2019-01-02 01:30:30 Starting Build inside a container
+2019-01-02 01:30:30 Found credentials in shared credentials file: ~/.aws/credentials
+2019-01-02 01:30:30 Building resource 'HelloWorldFunction'
+Build Failed
+Error: 'nodejs8.10' runtime is not supported
+```
+Solución:
+
+Buscando un poco, encontré que el soporte para nodejs versión 8.10 fue agregado
+en este release https://github.com/awslabs/aws-sam-cli/releases/tag/v0.9.0. 
+Entonces, verificando que no tengo la última versión, proceso a actualizarlo con 
+el siguiente comando:
+```
+sa:~/environment/sam-app $ pip install --user --upgrade aws-sam-cli
+```
+Verifico la nueva versión:
+```
+sa:~/environment/sam-app $ sam --version
+SAM CLI, version 0.10.0
+```
+Posteriormente a probar el comando para compilar nuevamente:
+```
+sa:~/environment/sam-app $ sam build --use-container
+2019-01-02 01:39:48 Starting Build inside a container
+2019-01-02 01:39:48 Found credentials in shared credentials file: ~/.aws/credentials
+2019-01-02 01:39:48 Building resource 'HelloWorldFunction'
+
+Fetching lambci/lambda:build-nodejs8.10 Docker container image..........................................................................................................................................................................................................................................................
+2019-01-02 01:40:16 Mounting /home/ec2-user/environment/sam-app/hello_world as /tmp/samcli/source:ro inside runtime container
+'nodejs' runtime has not been validated!
+Running NodejsNpmBuilder:NpmPack
+Running NodejsNpmBuilder:CopySource
+Running NodejsNpmBuilder:NpmInstall
+
+Build Succeeded
+
+Built Artifacts  : .aws-sam/build
+Built Template   : .aws-sam/build/template.yaml
+
+Commands you can use next
+=========================
+[*] Invoke Function: sam local invoke
+[*] Package: sam package --s3-bucket <yourbucket>
+```
